@@ -9,6 +9,8 @@ Hui Fang
   - [1.3 Gaining Access to the API](#13-gaining-access-to-the-api)
     - [1.3.1 A function to query median salaries of first tier cities
       worldwide](#131-a-function-to-query-median-salaries-of-first-tier-cities-worldwide)
+      - [1.3.1.1 Clean the data set of salary in from 52 first tier
+        cities](#1311-clean-the-data-set-of-salary-in-from-52-first-tier-cities)
     - [1.3.2 A function to query life quality scores of state capital
       cities in the
       US](#132-a-function-to-query-life-quality-scores-of-state-capital-cities-in-the-us)
@@ -16,8 +18,13 @@ Hui Fang
       city](#133-function-to-display-summary-of-selected-city)
     - [1.3.4 Function to display summary of city of your
       choose](#134-function-to-display-summary-of-city-of-your-choose)
+      - [1.3.4.1 Compare life quality scores for US cities that
+        available in the Teleport
+        API](#1341-compare-life-quality-scores-for-us-cities-that-available-in-the-teleport-api)
   - [1.4 Data Exploration](#14-data-exploration)
     - [1.4.1 Salary of 50 countries](#141-salary-of-50-countries)
+      - [1.4.1.1 Tidy the raw data of median salary from 50
+        countries](#1411-tidy-the-raw-data-of-median-salary-from-50-countries)
     - [1.4.2 Median salary of 50
       countries](#142-median-salary-of-50-countries)
     - [1.4.3 Job title and median salary from 50
@@ -26,14 +33,20 @@ Hui Fang
       jobs](#144-a-contingency-table-showing-high-paying-and-non-high-paying-jobs)
     - [1.4.5 Visulization of median salary of 52
       cities](#145-visulization-of-median-salary-of-52-cities)
+      - [1.4.5.1 Top 10 high-paying jobs in 52 first tier cities
+        worldwide](#1451-top-10-high-paying-jobs-in-52-first-tier-cities-worldwide)
     - [1.4.6 Teleport scores of 18 US
       cityies](#146-teleport-scores-of-18-us-cityies)
     - [1.4.7 The top 10 median salary cities of the 52 first tier cities
       worldwide](#147-the-top-10-median-salary-cities-of-the-52-first-tier-cities-worldwide)
+      - [1.4.7.1 Top 10 median salary jobs of 52
+        cities](#1471-top-10-median-salary-jobs-of-52-cities)
     - [1.4.8 Graphs showing different life quality scores of US
       cities](#148-graphs-showing-different-life-quality-scores-of-us-cities)
     - [1.4.9 A function showing life quality in 18 US state capital
       cities.](#149-a-function-showing-life-quality-in-18-us-state-capital-cities)
+      - [1.4.9.1 Display life quality scores of city of
+        interest](#1491-display-life-quality-scores-of-city-of-interest)
   - [1.5 Summary](#15-summary)
 
 ``` r
@@ -2638,7 +2651,7 @@ ggplot(world_top_10_jobs, aes(x = reorder(Job_Title, median_salary), y = median_
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- --> \#### The
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- --> \#### The
 bottom low-paying jobs in the first tier cities in the world
 
 ``` r
@@ -2660,7 +2673,7 @@ ggplot(world_bottom_10_jobs, aes(x = reorder(Job_Title, -median_salary), y = med
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ### 1.4.6 Teleport scores of 18 US cityies
 
@@ -2704,7 +2717,7 @@ ggplot(teleport_score, aes(x = city, y = score, size = score)) +
   color_palette  # Apply the color palette
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 The top 10 median salary jobs across 52 first tier cities
 
@@ -2908,7 +2921,7 @@ ggplot(combined_tidy_salary_data %>% filter(Job_Title %in% top_10_high_salary$Jo
   theme(legend.position = "none")  # Remove the legend
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ### 1.4.8 Graphs showing different life quality scores of US cities
 
@@ -2959,7 +2972,7 @@ for (i in 1:length(filtered_categories)) {
 }
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-39-1.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-2.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-3.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-4.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-5.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-6.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-7.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-8.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-9.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-10.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-11.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-12.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-13.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-14.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-15.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-39-16.png" width="25%" />
+<img src="README_files/figure-gfm/unnamed-chunk-21-1.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-2.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-3.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-4.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-5.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-6.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-7.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-8.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-9.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-10.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-11.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-12.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-13.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-14.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-15.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-21-16.png" width="25%" />
 
 ### 1.4.9 A function showing life quality in 18 US state capital cities.
 
@@ -3016,7 +3029,7 @@ if (!is.null(selected_city_data)) {
 
     ## Life Quality Scores for Raleigh
 
-![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ## 1.5 Summary
 
