@@ -3,40 +3,9 @@ ST558 Project 2
 Hui Fang
 2023-10-04
 
-- [1 Vignette of Teleport API](#1-vignette-of-teleport-api)
-  - [1.1 Introduction](#11-introduction)
-  - [1.2 Packages requirements](#12-packages-requirements)
-  - [1.3 Gaining Access to the API](#13-gaining-access-to-the-api)
-  - [1.4 Develop functions to query the
-    API](#14-develop-functions-to-query-the-api)
-    - [1.4.1 Query median salary of different jobs from 50
-      countries](#141-query-median-salary-of-different-jobs-from-50-countries)
-    - [1.4.2 Query median salary of first tier cities
-      worldwide](#142-query-median-salary-of-first-tier-cities-worldwide)
-    - [1.4.3 Query life quality scores of state capital cities in the
-      US](#143-query-life-quality-scores-of-state-capital-cities-in-the-us)
-  - [1.5 Data Exploration](#15-data-exploration)
-    - [1.5.1 Median salary of 50
-      countries](#151-median-salary-of-50-countries)
-    - [1.5.2 Job title and median salary from 50
-      countries](#152-job-title-and-median-salary-from-50-countries)
-    - [1.5.3 High-paying and non-high-paying jobs (contingency
-      table)](#153-high-paying-and-non-high-paying-jobs-contingency-table)
-    - [1.5.4 Visulization of median salary of 52 first tier cities
-      worldwide](#154-visulization-of-median-salary-of-52-first-tier-cities-worldwide)
-    - [1.5.5 The top 10 median salary cities of the 52 first tier cities
-      worldwide](#155-the-top-10-median-salary-cities-of-the-52-first-tier-cities-worldwide)
-    - [1.5.6 Visualize different life quality scores of US
-      cities](#156-visualize-different-life-quality-scores-of-us-cities)
-    - [1.5.7 Life quality scores in 18 US state capital
-      cities](#157-life-quality-scores-in-18-us-state-capital-cities)
-    - [1.5.8 Teleport scores of 18 US
-      cityies](#158-teleport-scores-of-18-us-cityies)
-  - [1.6 Summary](#16-summary)
+# Vignette of Teleport API
 
-# 1 Vignette of Teleport API
-
-## 1.1 Introduction
+## Introduction
 
 The document serves as a vignette describing how to read and summarize
 data from an [API](https://en.wikipedia.org/wiki/API). In this
@@ -46,7 +15,7 @@ that offers an up-to-date quality of life database for Planet Earth,
 incorporating data from over 300 different dimensions from more than 70
 different sources.
 
-## 1.2 Packages requirements
+## Packages requirements
 
 The following `R` packages were used to create the vignette. Users are
 encouraged to have these packages installed or loaded to run the
@@ -75,12 +44,13 @@ library(jsonlite)
 library(tidyverse)
 ```
 
-    ## ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.3     ✔ purrr     1.0.2
-    ## ✔ forcats   1.0.0     ✔ readr     2.1.4
-    ## ✔ ggplot2   3.4.3     ✔ stringr   1.5.0
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.3     ✔ readr     2.1.4
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+    ## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
     ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✔ purrr     1.0.2     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter()  masks stats::filter()
     ## ✖ purrr::flatten() masks jsonlite::flatten()
     ## ✖ dplyr::lag()     masks stats::lag()
@@ -103,16 +73,16 @@ library(kableExtra)
 library(countrycode)
 ```
 
-## 1.3 Gaining Access to the API
+## Gaining Access to the API
 
 Teleport API does not require a key for access, making it less complex
 to use compared to other APIs that require a key. Users can simply vist
 the [Teleport API](https://developers.teleport.org/api/) website and
 follow the instructions to query the endpoints they want.
 
-## 1.4 Develop functions to query the API
+## Develop functions to query the API
 
-### 1.4.1 Query median salary of different jobs from 50 countries
+### Query median salary of different jobs from 50 countries
 
 ``` r
 # Define a list of ISO alpha-2 country codes for the 50 countries to retrieve salary data for
@@ -153,7 +123,7 @@ for (country_code in country_codes) {
 }
 ```
 
-### 1.4.2 Query median salary of first tier cities worldwide
+### Query median salary of first tier cities worldwide
 
 ``` r
 # Define a list of city slugs for 52 first-tier cities
@@ -198,7 +168,7 @@ for (city_slug in first_tier_city_slugs) {
 }
 ```
 
-#### 1.4.2.1 Clean the data set of salary in from 52 first tier cities
+#### Clean the data set of salary in from 52 first tier cities
 
 ``` r
 # Initialize an empty list to store tidy salary data for each city
@@ -232,7 +202,7 @@ combined_tidy_salary_data <- do.call(rbind, tidy_salary_data_list)
 # head(combined_tidy_salary_data)
 ```
 
-### 1.4.3 Query life quality scores of state capital cities in the US
+### Query life quality scores of state capital cities in the US
 
 ``` r
 # Define a function to fetch city data
@@ -312,7 +282,7 @@ city_data_table <- city_data_table %>%
 # head(city_data_table)
 ```
 
-#### 1.4.3.1 Produce life quality scores data set for 18 US cities
+#### Produce life quality scores data set for 18 US cities
 
 ``` r
 # Create scores_df1 using city_data_table
@@ -324,7 +294,7 @@ scores_df1 <- city_data_table %>%
 # head(scores_df1)
 ```
 
-#### 1.4.3.2 Build a table to show city names for you to choose from
+#### Build a table to show city names for you to choose from
 
 You can choose city of interest from the following table and put its
 name in the next function to show the summary of the city.
@@ -357,238 +327,154 @@ kable(us_city_table)
 <thead>
 <tr>
 <th style="text-align:right;">
-
 Number
-
 </th>
 <th style="text-align:left;">
-
 City_Name
-
 </th>
 <th style="text-align:right;">
-
 Number
-
 </th>
 <th style="text-align:left;">
-
 City_Name
-
 </th>
 <th style="text-align:right;">
-
 Number
-
 </th>
 <th style="text-align:left;">
-
 City_Name
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:right;">
-
 1
-
 </td>
 <td style="text-align:left;">
-
 phoenix
-
 </td>
 <td style="text-align:right;">
-
 7
-
 </td>
 <td style="text-align:left;">
-
 boston
-
 </td>
 <td style="text-align:right;">
-
 13
-
 </td>
 <td style="text-align:left;">
-
 austin
-
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-
 2
-
 </td>
 <td style="text-align:left;">
-
 atlanta
-
 </td>
 <td style="text-align:right;">
-
 8
-
 </td>
 <td style="text-align:left;">
-
 raleigh
-
 </td>
 <td style="text-align:right;">
-
 14
-
 </td>
 <td style="text-align:left;">
-
 salt-lake-city
-
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-
 3
-
 </td>
 <td style="text-align:left;">
-
 honolulu
-
 </td>
 <td style="text-align:right;">
-
 9
-
 </td>
 <td style="text-align:left;">
-
 columbus
-
 </td>
 <td style="text-align:right;">
-
 15
-
 </td>
 <td style="text-align:left;">
-
 new-york
-
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-
 4
-
 </td>
 <td style="text-align:left;">
-
 boise
-
 </td>
 <td style="text-align:right;">
-
 10
-
 </td>
 <td style="text-align:left;">
-
 oklahoma-city
-
 </td>
 <td style="text-align:right;">
-
 16
-
 </td>
 <td style="text-align:left;">
-
 richmond
-
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-
 5
-
 </td>
 <td style="text-align:left;">
-
 indianapolis
-
 </td>
 <td style="text-align:right;">
-
 11
-
 </td>
 <td style="text-align:left;">
-
 providence
-
 </td>
 <td style="text-align:right;">
-
 17
-
 </td>
 <td style="text-align:left;">
-
 charleston
-
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-
 6
-
 </td>
 <td style="text-align:left;">
-
 des-moines
-
 </td>
 <td style="text-align:right;">
-
 12
-
 </td>
 <td style="text-align:left;">
-
 nashville
-
 </td>
 <td style="text-align:right;">
-
 18
-
 </td>
 <td style="text-align:left;">
-
 madison
-
 </td>
 </tr>
 </tbody>
 </table>
 
-## 1.5 Data Exploration
+## Data Exploration
 
-### 1.5.1 Median salary of 50 countries
+### Median salary of 50 countries
 
-#### 1.5.1.1 Tidy the raw data of median salary from 50 countries
+#### Tidy the raw data of median salary from 50 countries
 
 ``` r
 # Initialize an empty list to store tidy salary data for all countries
@@ -625,7 +511,15 @@ if (length(tidy_salary_data_list) > 0) {
 }
 ```
 
-#### 1.5.1.2 Display median salary of 50 countries
+    ##      Country                Job_Title Percentile_50_Salary
+    ## US.1      US          Account Manager             61157.96
+    ## US.2      US               Accountant             55013.10
+    ## US.3      US Administrative Assistant             33900.14
+    ## US.4      US                Architect             61169.11
+    ## US.5      US                 Attorney             82706.83
+    ## US.6      US         Business Analyst             64180.18
+
+#### Display median salary of 50 countries
 
 Among the 50 countries, Switzerland has the highest median salary,
 followed by Denmark and the United States. Norway ranks fourth. The
@@ -662,622 +556,418 @@ kable(grouped_country_salary_data, col.names = c("Country", "Median Salary"))
 <thead>
 <tr>
 <th style="text-align:left;">
-
 Country
-
 </th>
 <th style="text-align:right;">
-
 Median Salary
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-
 Switzerland
-
 </td>
 <td style="text-align:right;">
-
 73947.76
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Denmark
-
 </td>
 <td style="text-align:right;">
-
 62480.27
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 United States
-
 </td>
 <td style="text-align:right;">
-
 60576.03
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Norway
-
 </td>
 <td style="text-align:right;">
-
 55289.46
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Australia
-
 </td>
 <td style="text-align:right;">
-
 54952.70
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 United Arab Emirates
-
 </td>
 <td style="text-align:right;">
-
 53600.60
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Singapore
-
 </td>
 <td style="text-align:right;">
-
 49001.15
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Israel
-
 </td>
 <td style="text-align:right;">
-
 46884.28
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Canada
-
 </td>
 <td style="text-align:right;">
-
 45704.82
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Sweden
-
 </td>
 <td style="text-align:right;">
-
 45621.23
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Qatar
-
 </td>
 <td style="text-align:right;">
-
 44240.44
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Japan
-
 </td>
 <td style="text-align:right;">
-
 42333.38
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 South Korea
-
 </td>
 <td style="text-align:right;">
-
 41593.15
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Germany
-
 </td>
 <td style="text-align:right;">
-
 41191.39
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Oman
-
 </td>
 <td style="text-align:right;">
-
 39991.10
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Bangladesh
-
 </td>
 <td style="text-align:right;">
-
 39013.15
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Netherlands
-
 </td>
 <td style="text-align:right;">
-
 38344.56
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Ireland
-
 </td>
 <td style="text-align:right;">
-
 38017.50
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Finland
-
 </td>
 <td style="text-align:right;">
-
 37976.88
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Saudi Arabia
-
 </td>
 <td style="text-align:right;">
-
 36243.28
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Belgium
-
 </td>
 <td style="text-align:right;">
-
 36212.77
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 United Kingdom
-
 </td>
 <td style="text-align:right;">
-
 35991.88
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Bahrain
-
 </td>
 <td style="text-align:right;">
-
 35580.12
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Argentina
-
 </td>
 <td style="text-align:right;">
-
 35416.88
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Austria
-
 </td>
 <td style="text-align:right;">
-
 35267.31
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 China
-
 </td>
 <td style="text-align:right;">
-
 35218.68
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Kuwait
-
 </td>
 <td style="text-align:right;">
-
 34787.12
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 France
-
 </td>
 <td style="text-align:right;">
-
 33368.04
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 South Africa
-
 </td>
 <td style="text-align:right;">
-
 31292.01
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Turkey
-
 </td>
 <td style="text-align:right;">
-
 27608.83
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Spain
-
 </td>
 <td style="text-align:right;">
-
 27483.48
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Brazil
-
 </td>
 <td style="text-align:right;">
-
 26878.23
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Italy
-
 </td>
 <td style="text-align:right;">
-
 25622.44
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Thailand
-
 </td>
 <td style="text-align:right;">
-
 25445.45
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Lebanon
-
 </td>
 <td style="text-align:right;">
-
 22965.13
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Nigeria
-
 </td>
 <td style="text-align:right;">
-
 21588.91
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Malaysia
-
 </td>
 <td style="text-align:right;">
-
 21363.64
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Czechia
-
 </td>
 <td style="text-align:right;">
-
 20350.27
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Poland
-
 </td>
 <td style="text-align:right;">
-
 20144.83
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 India
-
 </td>
 <td style="text-align:right;">
-
 18859.63
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Hungary
-
 </td>
 <td style="text-align:right;">
-
 18766.75
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Mexico
-
 </td>
 <td style="text-align:right;">
-
 17804.79
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Portugal
-
 </td>
 <td style="text-align:right;">
-
 17261.50
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Russia
-
 </td>
 <td style="text-align:right;">
-
 16921.42
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Greece
-
 </td>
 <td style="text-align:right;">
-
 16710.34
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Indonesia
-
 </td>
 <td style="text-align:right;">
-
 14747.83
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Vietnam
-
 </td>
 <td style="text-align:right;">
-
 14605.79
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Philippines
-
 </td>
 <td style="text-align:right;">
-
 13225.28
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Pakistan
-
 </td>
 <td style="text-align:right;">
-
 11784.53
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Egypt
-
 </td>
 <td style="text-align:right;">
-
 10190.00
-
 </td>
 </tr>
 </tbody>
 </table>
 
-### 1.5.2 Job title and median salary from 50 countries
+### Job title and median salary from 50 countries
 
 Using the data set of 50 countries, I grouped the data by job titles and
 found the top 10 highest-paying and bottom 10 lowest-paying jobs. The
@@ -1313,136 +1003,92 @@ kable(world_top_10_job)
 <thead>
 <tr>
 <th style="text-align:left;">
-
 Job_Title
-
 </th>
 <th style="text-align:right;">
-
 Median_Salary
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-
 C Level Executive
-
 </td>
 <td style="text-align:right;">
-
 84261.20
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Physician
-
 </td>
 <td style="text-align:right;">
-
 50376.56
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Finance Manager
-
 </td>
 <td style="text-align:right;">
-
 47929.75
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Dentist
-
 </td>
 <td style="text-align:right;">
-
 47377.39
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 IT Manager
-
 </td>
 <td style="text-align:right;">
-
 46188.16
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Product Manager
-
 </td>
 <td style="text-align:right;">
-
 45765.94
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Operations Manager
-
 </td>
 <td style="text-align:right;">
-
 45359.57
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Project Manager
-
 </td>
 <td style="text-align:right;">
-
 44689.33
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Data Scientist
-
 </td>
 <td style="text-align:right;">
-
 44445.77
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Attorney
-
 </td>
 <td style="text-align:right;">
-
 42813.51
-
 </td>
 </tr>
 </tbody>
@@ -1461,142 +1107,98 @@ kable(world_bottom_10_job)
 <thead>
 <tr>
 <th style="text-align:left;">
-
 Job_Title
-
 </th>
 <th style="text-align:right;">
-
 Median_Salary
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-
 Teacher
-
 </td>
 <td style="text-align:right;">
-
 25629.59
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Accountant
-
 </td>
 <td style="text-align:right;">
-
 25593.35
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Nurse
-
 </td>
 <td style="text-align:right;">
-
 24547.02
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Customer Support
-
 </td>
 <td style="text-align:right;">
-
 24311.59
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Interior Designer
-
 </td>
 <td style="text-align:right;">
-
 23998.31
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Graphic Designer
-
 </td>
 <td style="text-align:right;">
-
 22144.38
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Administrative Assistant
-
 </td>
 <td style="text-align:right;">
-
 19785.98
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Receptionist
-
 </td>
 <td style="text-align:right;">
-
 17898.02
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Waiter
-
 </td>
 <td style="text-align:right;">
-
 13978.94
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Cashier
-
 </td>
 <td style="text-align:right;">
-
 13109.60
-
 </td>
 </tr>
 </tbody>
 </table>
 
-### 1.5.3 High-paying and non-high-paying jobs (contingency table)
+### High-paying and non-high-paying jobs (contingency table)
 
 In the contingency table below, you can observe the distribution of job
 titles in each city categorized into two groups: non-high-paying
@@ -1631,7 +1233,8 @@ high_paying_table <- high_pay_data %>%
               values_fill = 0)
 ```
 
-    ## `summarise()` has grouped output by 'City'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'City'. You can override using the
+    ## `.groups` argument.
 
 ``` r
 # Print the summary table
@@ -1643,911 +1246,593 @@ kable(high_paying_table)
 <thead>
 <tr>
 <th style="text-align:left;">
-
 City
-
 </th>
 <th style="text-align:right;">
-
 High_pay_No
-
 </th>
 <th style="text-align:right;">
-
 High_pay_Yes
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-
 Ankara
-
 </td>
 <td style="text-align:right;">
-
 47
-
 </td>
 <td style="text-align:right;">
-
 5
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Bangkok
-
 </td>
 <td style="text-align:right;">
-
 41
-
 </td>
 <td style="text-align:right;">
-
 11
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Beijing
-
 </td>
 <td style="text-align:right;">
-
 34
-
 </td>
 <td style="text-align:right;">
-
 18
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Berlin
-
 </td>
 <td style="text-align:right;">
-
 45
-
 </td>
 <td style="text-align:right;">
-
 7
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Buenos-Aires
-
 </td>
 <td style="text-align:right;">
-
 37
-
 </td>
 <td style="text-align:right;">
-
 15
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Cairo
-
 </td>
 <td style="text-align:right;">
-
 52
-
 </td>
 <td style="text-align:right;">
-
 0
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Calgary
-
 </td>
 <td style="text-align:right;">
-
 21
-
 </td>
 <td style="text-align:right;">
-
 31
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Cape-Town
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Casablanca
-
 </td>
 <td style="text-align:right;">
-
 52
-
 </td>
 <td style="text-align:right;">
-
 0
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Chennai
-
 </td>
 <td style="text-align:right;">
-
 52
-
 </td>
 <td style="text-align:right;">
-
 0
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Chicago
-
 </td>
 <td style="text-align:right;">
-
 13
-
 </td>
 <td style="text-align:right;">
-
 39
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Doha
-
 </td>
 <td style="text-align:right;">
-
 27
-
 </td>
 <td style="text-align:right;">
-
 25
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Dubai
-
 </td>
 <td style="text-align:right;">
-
 29
-
 </td>
 <td style="text-align:right;">
-
 23
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Edmonton
-
 </td>
 <td style="text-align:right;">
-
 25
-
 </td>
 <td style="text-align:right;">
-
 27
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Ho-Chi-Minh-City
-
 </td>
 <td style="text-align:right;">
-
 48
-
 </td>
 <td style="text-align:right;">
-
 4
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Hong-Kong
-
 </td>
 <td style="text-align:right;">
-
 16
-
 </td>
 <td style="text-align:right;">
-
 36
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Hyderabad
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Istanbul
-
 </td>
 <td style="text-align:right;">
-
 47
-
 </td>
 <td style="text-align:right;">
-
 5
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Jakarta
-
 </td>
 <td style="text-align:right;">
-
 50
-
 </td>
 <td style="text-align:right;">
-
 2
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Johannesburg
-
 </td>
 <td style="text-align:right;">
-
 48
-
 </td>
 <td style="text-align:right;">
-
 4
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Kiev
-
 </td>
 <td style="text-align:right;">
-
 52
-
 </td>
 <td style="text-align:right;">
-
 0
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Kuala-Lumpur
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Lagos
-
 </td>
 <td style="text-align:right;">
-
 46
-
 </td>
 <td style="text-align:right;">
-
 6
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Lima
-
 </td>
 <td style="text-align:right;">
-
 49
-
 </td>
 <td style="text-align:right;">
-
 3
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 London
-
 </td>
 <td style="text-align:right;">
-
 35
-
 </td>
 <td style="text-align:right;">
-
 17
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Los-Angeles
-
 </td>
 <td style="text-align:right;">
-
 10
-
 </td>
 <td style="text-align:right;">
-
 42
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Madrid
-
 </td>
 <td style="text-align:right;">
-
 48
-
 </td>
 <td style="text-align:right;">
-
 4
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Manila
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Melbourne
-
 </td>
 <td style="text-align:right;">
-
 17
-
 </td>
 <td style="text-align:right;">
-
 35
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Mexico-City
-
 </td>
 <td style="text-align:right;">
-
 52
-
 </td>
 <td style="text-align:right;">
-
 0
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Miami
-
 </td>
 <td style="text-align:right;">
-
 20
-
 </td>
 <td style="text-align:right;">
-
 32
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Montreal
-
 </td>
 <td style="text-align:right;">
-
 33
-
 </td>
 <td style="text-align:right;">
-
 19
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Moscow
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Mumbai
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Nairobi
-
 </td>
 <td style="text-align:right;">
-
 51
-
 </td>
 <td style="text-align:right;">
-
 1
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 New-York
-
 </td>
 <td style="text-align:right;">
-
 6
-
 </td>
 <td style="text-align:right;">
-
 46
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Osaka
-
 </td>
 <td style="text-align:right;">
-
 38
-
 </td>
 <td style="text-align:right;">
-
 14
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Paris
-
 </td>
 <td style="text-align:right;">
-
 47
-
 </td>
 <td style="text-align:right;">
-
 5
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Rio-De-Janeiro
-
 </td>
 <td style="text-align:right;">
-
 48
-
 </td>
 <td style="text-align:right;">
-
 4
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Riyadh
-
 </td>
 <td style="text-align:right;">
-
 39
-
 </td>
 <td style="text-align:right;">
-
 13
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Rome
-
 </td>
 <td style="text-align:right;">
-
 50
-
 </td>
 <td style="text-align:right;">
-
 2
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 San-Francisco-Bay-Area
-
 </td>
 <td style="text-align:right;">
-
 7
-
 </td>
 <td style="text-align:right;">
-
 45
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Santiago
-
 </td>
 <td style="text-align:right;">
-
 35
-
 </td>
 <td style="text-align:right;">
-
 17
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Sao-Paulo
-
 </td>
 <td style="text-align:right;">
-
 43
-
 </td>
 <td style="text-align:right;">
-
 9
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Seoul
-
 </td>
 <td style="text-align:right;">
-
 32
-
 </td>
 <td style="text-align:right;">
-
 20
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Shanghai
-
 </td>
 <td style="text-align:right;">
-
 28
-
 </td>
 <td style="text-align:right;">
-
 24
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Singapore
-
 </td>
 <td style="text-align:right;">
-
 31
-
 </td>
 <td style="text-align:right;">
-
 21
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Sydney
-
 </td>
 <td style="text-align:right;">
-
 15
-
 </td>
 <td style="text-align:right;">
-
 37
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Tel-Aviv
-
 </td>
 <td style="text-align:right;">
-
 27
-
 </td>
 <td style="text-align:right;">
-
 25
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Tokyo
-
 </td>
 <td style="text-align:right;">
-
 34
-
 </td>
 <td style="text-align:right;">
-
 18
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Toronto
-
 </td>
 <td style="text-align:right;">
-
 27
-
 </td>
 <td style="text-align:right;">
-
 25
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 Vancouver
-
 </td>
 <td style="text-align:right;">
-
 29
-
 </td>
 <td style="text-align:right;">
-
 23
-
 </td>
 </tr>
 </tbody>
 </table>
 
-### 1.5.4 Visulization of median salary of 52 first tier cities worldwide
+### Visulization of median salary of 52 first tier cities worldwide
 
 Among the 52 first-tier cities worldwide, I conducted an analysis of the
 median salaries associated with 52 distinct job titles. The figures
@@ -2556,7 +1841,7 @@ well as the 10 job titles with the lowest median salaries. This
 information can serve as a valuable reference for newcomers who are
 contemplating their career paths.
 
-#### 1.5.4.1 Top 10 high-paying jobs in 52 first tier cities worldwide
+#### Top 10 high-paying jobs in 52 first tier cities worldwide
 
 ``` r
 # Create a bar plot of the top 10 median salaries by job title
@@ -2581,9 +1866,9 @@ ggplot(world_top_10_jobs, aes(x = reorder(Job_Title, median_salary), y = median_
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
-#### 1.5.4.2 The bottom 10 low-paying jobs in the first tier cities worldwide
+#### The bottom 10 low-paying jobs in the first tier cities worldwide
 
 ``` r
 # Create a bar plot of the 10 lowest median salaries by job title
@@ -2604,7 +1889,7 @@ ggplot(world_bottom_10_jobs, aes(x = reorder(Job_Title, -median_salary), y = med
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 The top 10 median salary jobs across 52 first tier cities
 
@@ -2639,7 +1924,7 @@ print(top_10_salary_titles)
     ##  9 IT Manager                  45764.
     ## 10 Attorney                    44731.
 
-### 1.5.5 The top 10 median salary cities of the 52 first tier cities worldwide
+### The top 10 median salary cities of the 52 first tier cities worldwide
 
 ``` r
 # Load the required library
@@ -2664,142 +1949,98 @@ kable(top_10_salary_cities)
 <thead>
 <tr>
 <th style="text-align:left;">
-
 City
-
 </th>
 <th style="text-align:right;">
-
 Median_Salary
-
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-
 san-francisco-bay-area
-
 </td>
 <td style="text-align:right;">
-
 84450.63
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 new-york
-
 </td>
 <td style="text-align:right;">
-
 72257.19
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 los-angeles
-
 </td>
 <td style="text-align:right;">
-
 69872.40
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 chicago
-
 </td>
 <td style="text-align:right;">
-
 65375.38
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 hong-kong
-
 </td>
 <td style="text-align:right;">
-
 63048.41
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 miami
-
 </td>
 <td style="text-align:right;">
-
 58275.84
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 sydney
-
 </td>
 <td style="text-align:right;">
-
 57505.09
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 melbourne
-
 </td>
 <td style="text-align:right;">
-
 56058.25
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 calgary
-
 </td>
 <td style="text-align:right;">
-
 53349.92
-
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-
 edmonton
-
 </td>
 <td style="text-align:right;">
-
 50877.99
-
 </td>
 </tr>
 </tbody>
 </table>
 
-#### 1.5.5.1 Top 10 median salary jobs from 52 cities
+#### Top 10 median salary jobs from 52 cities
 
 ``` r
 # Filter the top 10 highest median salary jobs
@@ -2822,9 +2063,9 @@ ggplot(combined_tidy_salary_data %>% filter(Job_Title %in% top_10_high_salary$Jo
   theme(legend.position = "none")  # Remove the legend
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
-### 1.5.6 Visualize different life quality scores of US cities
+### Visualize different life quality scores of US cities
 
 I created a group of graphs to visualize different categories of life
 quality scores. Each bar plot shows the scores of one category in an
@@ -2873,7 +2114,7 @@ for (i in 1:length(filtered_categories)) {
 }
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-17-1.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-2.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-3.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-4.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-5.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-6.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-7.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-8.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-9.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-10.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-11.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-12.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-13.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-14.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-15.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-16.png" width="25%" />
+<img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-1.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-2.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-3.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-4.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-5.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-6.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-7.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-8.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-9.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-10.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-11.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-12.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-13.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-14.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-15.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-16.png" width="25%" />
 \### Display summary for the city of your choice  
 Once you have chosen the city you are interested in from the above
 table, simply replace “Raleigh” with your chosen city’s name in the
@@ -2937,7 +2178,7 @@ if (!is.null(selected_city_data)) {
     ## According to our city rankings, this is a good place to live with high ratings in healthcare, education and environmental quality.
     ## Raleigh is one of the top ten city matches for 3.4% of Teleport users.
 
-### 1.5.7 Life quality scores in 18 US state capital cities
+### Life quality scores in 18 US state capital cities
 
 The following function will create a table presenting life quality
 scores for all 18 state capital cities of the US, which are accessible
@@ -2948,7 +2189,7 @@ preference from the aforementioned city name table and substitute
 of a plot that visualizes life quality scores across diverse categories
 including Housing, Cost of Living, Safety, Education, and more.
 
-#### 1.5.7.1 Display life quality scores of city of interest
+#### Display life quality scores of city of interest
 
 ``` r
 # Default city
@@ -2992,9 +2233,9 @@ if (!is.null(selected_city_data)) {
 
     ## Life Quality Scores for Raleigh
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-### 1.5.8 Teleport scores of 18 US cityies
+### Teleport scores of 18 US cityies
 
 The bubble plot reveals insights into the quality of life across 18
 state capital cities in the United States. Among these cities, Boston,
@@ -3037,13 +2278,15 @@ ggplot(teleport_score, aes(x = city, y = score, size = score)) +
   color_palette  # Apply the color palette
 ```
 
-    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as of ggplot2 3.3.4.
+    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+    ## of ggplot2 3.3.4.
     ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
-## 1.6 Summary
+## Summary
 
 In this vignette, I developed some R functions to interact with the
 Teleport API and retrieve some endpoints data. I performed a preliminary

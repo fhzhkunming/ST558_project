@@ -2,26 +2,12 @@
 title: "ST558 Project 2"
 author: "Hui Fang"
 date: "2023-10-04"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-```{r,eval=FALSE}
-library("rmarkdown")
-  rmarkdown::render("Project_2_HuiFang_1.Rmd", 
-            output_format = "github_document", 
-            output_file = "README.md",
-            output_options = list(
-              name_value_pairs = "value",   
-              toc = TRUE,
-              toc_depth = 3, 
-              number_sections = TRUE,  
-              df_print = tibble
-                  )
-)
-```
+```  
 # Vignette of Teleport API
 
 ## Introduction  
@@ -629,7 +615,7 @@ if (!is.null(selected_city_data)) {
   
   # Print the table with the modified column name
   cat(table_title, "\n")
-  print(categories_df)
+  #print(categories_df)
   
   # Create a bar plot of life quality scores
   library(ggplot2)
