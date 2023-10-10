@@ -33,13 +33,13 @@ The following `R` packages were used to create the vignette. Users are encourage
 - [httr :](https://httr.r-lib.org/) For assessing the API  
 - [jsonlite :](https://cran.r-project.org/web/packages/jsonlite/index.html) For interacting with API   
 - [tidyverse :](https://www.tidyverse.org/) A set of packages for data manipulation and visualization  
-- [knitr :](https://cran.r-project.org/web/packages/knitr/index.html) For friendly displaying tables in a markdown   
-- [kableExtra: ](https://cran.r-project.org/web/packages/kableExtra/index.html) A package for building complex HTML or 'LaTeX' tables.  
+- [knitr :](https://cran.r-project.org/web/packages/knitr/index.html) For friendly displaying tables in a markdown  
+- [kableExtra: ](https://cran.r-project.org/web/packages/kableExtra/index.html) For building complex HTML or 'LaTeX' tables  
 - [stringr](https://cran.r-project.org/web/packages/stringr/index.html) For working with character strings in R programming   
 - [countrycode](https://cran.r-project.org/web/packages/countrycode/) For converting country names and country codes
 
 Install and load the packages 
-```{r}
+```{r, results='hide', warning=FALSE}
 library(httr)
 library(jsonlite)
 library(tidyverse)
@@ -50,9 +50,11 @@ library(countrycode)
 ```
 
 ## Gaining Access to the API  
-Teleport API does not require a key for access, making it less complex to use compared to other APIs that require a key. Users can simply vist the [Teleport API](https://developers.teleport.org/api/) website and follow the instructions to query the endpoints they want.   
+Teleport API does not require a key for access, making it less complex to use compared to other APIs that require a key. Users can simply vist the [Teleport API](https://developers.teleport.org/api/) website and follow the instructions to query the endpoints they want.  
+
 ## Develop functions to query the API   
-### A function to query median salaries of different jobs from 50 countries   
+
+### Query median salary of different jobs from 50 countries   
 ```{r}
 # Define a list of ISO alpha-2 country codes for the 50 countries to retrieve salary data for
 country_codes <- c(
@@ -92,12 +94,8 @@ for (country_code in country_codes) {
 }
 ```
 
-### A function to query median salaries of first tier cities worldwide
+### Query median salary of first tier cities worldwide
 ```{r}
-# Load the required libraries
-library(httr)
-library(jsonlite)
-
 # Define a list of city slugs for 52 first-tier cities
 first_tier_city_slugs <- c(
   "new-york", "los-angeles", "chicago", "miami", "san-francisco-bay-area",
@@ -138,9 +136,9 @@ for (city_slug in first_tier_city_slugs) {
     cat("Error: Unable to fetch salary data for", city_slug, "\n")
   }
 }
+```  
 
-```
-#### Clean the data set of salary in from 52 first tier cities 
+#### Clean the data set of salary in from 52 first tier cities  
 ```{r}
 # Initialize an empty list to store tidy salary data for each city
 tidy_salary_data_list <- list()
@@ -173,7 +171,7 @@ combined_tidy_salary_data <- do.call(rbind, tidy_salary_data_list)
 # head(combined_tidy_salary_data)
 ```
 
-### A function to query life quality scores of state capital cities in the US  
+### Query life quality scores of state capital cities in the US  
 ```{r, results='hide'}
 
 # Define a function to fetch city data
@@ -202,7 +200,10 @@ fetch_city_data <- function(city_slug) {
 }
 
 # List of state capital city slugs (use the updated capital_cities vector)
-capital_cities <- c("phoenix", "atlanta", "honolulu", "boise", "indianapolis", "des-moines", "boston",  "raleigh", "columbus", "oklahoma-city", "providence", "nashville", "austin", "salt-lake-city","new-york", "richmond", "charleston", "madison")
+capital_cities <- c("phoenix", "atlanta", "honolulu", "boise", "indianapolis", 
+                    "des-moines", "boston",  "raleigh", "columbus", "oklahoma-city", 
+                    "providence", "nashville", "austin", "salt-lake-city","new-york", 
+                    "richmond", "charleston", "madison")
 
 # Initialize an empty list to store city data
 city_data_list <- list()
@@ -248,10 +249,20 @@ city_data_table <- city_data_table %>%
 
 # Print the list of city data
 # head(city_data_table)
+```  
+#### Produce life quality scores data set for 18 US cities 
+```{r}
+# Create scores_df1 using city_data_table
+scores_df1 <- city_data_table %>%
+  select(city, category, score.1) %>%
+  rename(City = city, Category = category, Score = score.1)
+
+# Print the first few rows of scores_df1 to verify
+# head(scores_df1)
 ```
 
-### Function to display summary of selected city
-You can choose city of interest from the following table and put its name in the next function to show the summary of the city.
+#### Build a table to show city names for you to choose from  
+You can choose city of interest from the following table and put its name in the next function to show the summary of the city.  
 ```{r}
 # Extract unique city names from the 'city' column of city_data_table
 city_names <- unique(city_data_table$city)
@@ -274,8 +285,272 @@ colnames(us_city_table) <- c("Number", "City_Name", "Number", "City_Name", "Numb
 # Print the table
 # print(us_city_table, row.names = FALSE)
 kable(us_city_table)
+```     
+
+## Data Exploration
+### Median salary of 50 countries 
+#### Tidy the raw data of median salary from 50 countries
+```{r}
+# Initialize an empty list to store tidy salary data for all countries
+tidy_salary_data_list <- list()
+
+# Loop through the countries in country_salary_data_list
+for (country_code in names(country_salary_data_list)) {
+  country_data <- country_salary_data_list[[country_code]]
+  
+  # Check if there are salary data for the current country
+  if (!is.null(country_data$salaries)) {
+    salaries <- country_data$salaries
+    
+    # Extract the 25th percentile salary data
+    country_salary_data <- data.frame(
+      Country = rep(country_code, length(salaries$job$id)),
+      Job_Title = salaries$job$title,
+      Percentile_50_Salary = salaries$salary_percentiles$percentile_50
+    )
+    
+    tidy_salary_data_list[[country_code]] <- country_salary_data
+  } else {
+    cat("No salary data found for", country_code, "\n")
+  }
+}
+
+# Combine the tidy salary data for all countries into a single data frame
+if (length(tidy_salary_data_list) > 0) {
+  all_countries_salary_data <- do.call(rbind, tidy_salary_data_list)
+  # Print the first few rows of the combined salary data
+  head(all_countries_salary_data)
+} else {
+  cat("No salary data available for any country.\n")
+}
 ```
-### Function to display summary of city of your choose  
+#### Display median salary of 50 countries  
+Among the 50 countries, Switzerland has the highest median salary, followed by Denmark and the United States. Norway ranks fourth. The other countries in the top 10 highest salary list are Australia, United Arab Emirates, Singapore, Israel, Canada, and Sweden. On the other hand, the countries with the lowest median salaries are Vietnam, Indonesia, Greece, Russia, Portugal, Mexico, Hungary, India, Poland, and Czechia. The table below shows more details.  
+```{r}
+# Group the data by country and calculate the median salary for each country
+grouped_country_salary_data <- all_countries_salary_data %>%
+  group_by(Country) %>%
+  summarise(Median_salary = median(Percentile_50_Salary))
+
+# Convert country codes to full country names with the first letter capitalized
+grouped_country_salary_data$Country <- countrycode(grouped_country_salary_data$Country, 
+                                            origin = "iso2c", 
+                                            destination = "country.name", 
+                                            custom_match = c(US = "United States"))
+
+# Rename the Median_salary column
+colnames(grouped_country_salary_data)[colnames(grouped_country_salary_data) == "Median_salary"] <- "Median Salary"
+
+# Arrange the data by Median Salary in descending order
+grouped_country_salary_data <- grouped_country_salary_data %>%
+  arrange(desc(`Median Salary`))
+
+# Print the table
+kable(grouped_country_salary_data, col.names = c("Country", "Median Salary"))
+```  
+
+### Job title and median salary from 50 countries
+Using the data set of 50 countries, I grouped the data by job titles and found the top 10 highest-paying and bottom 10 lowest-paying jobs. The data is shown in the tables below. The top five highest-paying jobs are C Level Executive, Physician, Finance Manager, and Dentist, while the bottom five lowest-paying jobs are Cashier, Waiter, Receptionist, Administrative Assistant, and Graphic Designer. I will also compare the different jobs from 52 first-tier cities from different countries to see if they show the same trend. The data may be useful for people who are choosing a career path.    
+```{r}
+
+# Group the data by job title and calculate the median salary for each job title
+grouped_world_data <- all_countries_salary_data %>%
+  group_by(Job_Title) %>%
+  summarise(Median_Salary = median(Percentile_50_Salary))
+
+# Sort the grouped data by Median_Salary in descending order
+sorted_world_data <- grouped_world_data %>%
+  arrange(desc(Median_Salary))
+
+# Get the top 10 job titles
+world_top_10_job <- head(sorted_world_data, 10)
+
+# Print the top 10 job titles and their median salaries
+# print(world_top_10_job)
+
+# Print the top 10 job titles and their median salaries as a table
+kable(world_top_10_job)
+
+# Get the bottom 10 job titles
+world_bottom_10_job <- tail(sorted_world_data, 10)
+
+# Print the bottom 10 job titles and their median salaries
+# print(world_bottom_10_job)
+kable(world_bottom_10_job)
+```  
+### High-paying and non-high-paying jobs (contingency table)
+In the contingency table below, you can observe the distribution of job titles in each city categorized into two groups: non-high-paying (High_pay_No), indicating median salaries below the defined threshold of 50,000 USD/year, and high-paying (High_pay_Yes), representing median salaries above the threshold. For instance, in Ankara, there are 47 job titles considered non-high-paying and 5 job titles classified as high-paying based on the specified threshold. Similarly, this table provides insights into the breakdown of job titles as high-paying or non-high-paying across various cities.  
+
+```{r, warning=FALSE}
+# Make a copy of the original data frame
+high_pay_data <- combined_tidy_salary_data
+
+# Define the threshold for high-paying jobs (e.g., median salary above a certain value)
+threshold <- 50000
+
+# Create a binary column 'High_Paying' based on the threshold
+high_pay_data <- high_pay_data %>%
+  mutate(High_Paying = ifelse(Median_Salary > threshold, "High_pay_Yes", "High_pay_No"))
+
+# Capitalize the first letter of each city
+high_pay_data$City <- stringr::str_to_title(high_pay_data$City)
+
+# Create a summary table
+high_paying_table <- high_pay_data %>%
+  group_by(City, High_Paying) %>%
+  summarise(Count = n()) %>%
+  pivot_wider(names_from = High_Paying, 
+              values_from = Count, 
+              values_fill = 0)
+
+# Print the summary table
+# head(high_paying_table)
+kable(high_paying_table)
+```    
+
+### Visulization of median salary of 52 first tier cities worldwide   
+Among the 52 first-tier cities worldwide, I conducted an analysis of the median salaries associated with 52 distinct job titles. The figures below showcase the top 10 job titles with the highest median salaries as well as the 10 job titles with the lowest median salaries. This information can serve as a valuable reference for newcomers who are contemplating their career paths.  
+
+#### Top 10 high-paying jobs in 52 first tier cities worldwide  
+```{r}
+# Create a bar plot of the top 10 median salaries by job title
+world_top_10_jobs <- combined_tidy_salary_data %>%
+  group_by(Job_Title) %>%
+  summarise(median_salary = median(Median_Salary, na.rm = TRUE)) %>%
+  arrange(median_salary) %>%
+  top_n(10)
+
+ggplot(world_top_10_jobs, aes(x = reorder(Job_Title, median_salary), y = median_salary, fill = Job_Title)) +
+  geom_bar(stat = "identity") +
+  labs(title = "10 Lowest Median Salaries by Job Title",
+       x = "Job Title",
+       y = "Median Salary") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0)) +
+  guides(fill = "none") +  # Remove the legend
+  coord_flip()  # Flip the coordinates to create a horizontal bar plot
+```  
+
+#### The bottom 10 low-paying jobs in the first tier cities worldwide  
+```{r}
+# Create a bar plot of the 10 lowest median salaries by job title
+  world_bottom_10_jobs <- combined_tidy_salary_data %>%
+  group_by(Job_Title) %>%
+  summarise(median_salary = median(Median_Salary, na.rm = TRUE)) %>%
+  arrange(median_salary) %>%
+  slice(1:10)  # Select the bottom 10 jobs
+
+ggplot(world_bottom_10_jobs, aes(x = reorder(Job_Title, -median_salary), y = median_salary, fill = Job_Title)) +
+  geom_bar(stat = "identity") +
+  labs(title = "10 Lowest Median Salaries by Job Title",
+       x = "Job Title",
+       y = "Median Salary") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0)) +
+  guides(fill = "none") +  # Remove the legend
+  coord_flip()  # Flip the coordinates to create a horizontal bar plot
+```  
+
+The top 10 median salary jobs across 52 first tier cities
+```{r}
+# Load the required libraries
+library(dplyr)
+
+# Calculate the median salary for each job title across cities
+median_salaries <- combined_tidy_salary_data %>%
+  group_by(Job_Title) %>%
+  summarize(Median_Salary = median(Median_Salary, na.rm = TRUE)) %>%
+  arrange(desc(Median_Salary))
+
+# Select the top 10 job titles
+top_10_salary_titles <- head(median_salaries, 10)
+
+# Print the top 10 job titles
+print(top_10_salary_titles)
+
+```
+### The top 10 median salary cities of the 52 first tier cities worldwide
+```{r}
+# Load the required library
+library(dplyr)
+
+# Group the data by city and calculate the median salary for each city
+median_salary_by_city <- combined_tidy_salary_data %>%
+  group_by(City) %>%
+  summarize(Median_Salary = median(Median_Salary))
+
+# Sort the data in descending order based on median salary
+top_10_salary_cities <- median_salary_by_city %>%
+  arrange(desc(Median_Salary)) %>%
+  head(10)
+
+# Print the top 10 cities with the highest median salary
+# print(top_10_salary_cities)
+kable(top_10_salary_cities)
+```
+#### Top 10 median salary jobs from 52 cities
+
+```{r}
+# Filter the top 10 highest median salary jobs
+top_10_high_salary <- combined_tidy_salary_data %>%
+  group_by(Job_Title) %>%
+  summarize(Median_Salary = max(Median_Salary)) %>%
+  arrange(desc(Median_Salary)) %>%
+  head(10)
+
+# Create a scatter plot for the top 10 highest median salary jobs
+ggplot(combined_tidy_salary_data %>% filter(Job_Title %in% top_10_high_salary$Job_Title), 
+       aes(x = Median_Salary, y = reorder(Job_Title, -Median_Salary))) +
+  geom_point(aes(color = Job_Title), size = 3) +
+  labs(title = "Top 10 Median Salary Jobs Across 52 Cities",
+       x = "Median Salary (USD/Year)",
+       y = "Job Title") +
+  scale_x_continuous(labels = scales::number_format(accuracy = 1)) +  # Format x-axis labels
+  theme_minimal() +
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels
+  theme(legend.position = "none")  # Remove the legend
+```  
+
+### Visualize different life quality scores of US cities
+I created a group of graphs to visualize different categories of life quality scores. Each bar plot shows the scores of one category in an ascending order. For example, Oklahoma City has the highest score for housing and living cost. New York has the highest score for startup, venture capital, travel connectivity, and leisure & culture. There seems to be not much variation among 18 US cities on the healthcare. The group of plots below provides more information. This data may be helpful for those who are planning to move. 
+```{r, fig.show='hold', out.width="25%"}
+# compare each category across cities
+par(mfrow = c(5, 4))
+# Get unique category names
+unique_categories <- unique(scores_df1$Category)  # Use the correct column name
+
+# Filter out the "Economy Score" category
+filtered_categories <- unique_categories[unique_categories != "Economy"]
+
+# Create a list to store the plots
+plots <- list()
+
+# Iterate through each category (excluding "Economy Score") and create a bar plot
+for (category in filtered_categories) {
+  # Filter the data for the current category
+  category_data <- subset(scores_df1, Category == category)  # Use the correct column name
+  
+  # Sort the data by Score in descending order
+  category_data <- category_data[order(-category_data$Score), ]
+  
+  # Create a bar plot for the current category
+  p <- ggplot(category_data, aes(x = Score, y = reorder(City, -Score), fill = City)) +
+    geom_bar(stat = "identity") +
+    labs(title = paste("Bar Plot of", category, "Scores by City"), x = paste(category, "Score"), y = "City") +
+    theme(axis.text.y = element_text(hjust = 1)) +
+    coord_cartesian(xlim = c(0, 10)) +  # Set the x-axis limits to 0 and 10
+    theme(legend.position = "none")  # Remove the legend
+    
+  # Store the plot in the list
+  plots[[category]] <- p
+}
+
+# Print all the bar plots (excluding "Economy Score")
+for (i in 1:length(filtered_categories)) {
+  print(plots[[i]])
+}
+```
+### Display summary for the city of your choice  
 Once you have chosen the city you are interested in from the above table, simply replace "Raleigh" with your chosen city's name in the function below to view a summary of that city. I have set Raleigh as the default city.  
 ```{r}
 # define the query_city_data_by_name function
@@ -325,317 +600,9 @@ if (!is.null(selected_city_data)) {
 } else {
   cat("City not found\n")
 }
-```
+```    
 
-#### Compare life quality scores for US cities that available in the Teleport API
-```{r}
-# Create scores_df1 using city_data_table
-scores_df1 <- city_data_table %>%
-  select(city, category, score.1) %>%
-  rename(City = city, Category = category, Score = score.1)
-
-# Print the first few rows of scores_df1 to verify
-# head(scores_df1)
-```
-## Data Exploration
-### Salary of 50 countries 
-#### Tidy the raw data of median salary from 50 countries
-```{r}
-# Initialize an empty list to store tidy salary data for all countries
-tidy_salary_data_list <- list()
-
-# Loop through the countries in country_salary_data_list
-for (country_code in names(country_salary_data_list)) {
-  country_data <- country_salary_data_list[[country_code]]
-  
-  # Check if there are salary data for the current country
-  if (!is.null(country_data$salaries)) {
-    salaries <- country_data$salaries
-    
-    # Extract the 25th percentile salary data
-    country_salary_data <- data.frame(
-      Country = rep(country_code, length(salaries$job$id)),
-      Job_Title = salaries$job$title,
-      Percentile_50_Salary = salaries$salary_percentiles$percentile_50
-    )
-    
-    tidy_salary_data_list[[country_code]] <- country_salary_data
-  } else {
-    cat("No salary data found for", country_code, "\n")
-  }
-}
-
-# Combine the tidy salary data for all countries into a single data frame
-if (length(tidy_salary_data_list) > 0) {
-  all_countries_salary_data <- do.call(rbind, tidy_salary_data_list)
-  # Print the first few rows of the combined salary data
-  head(all_countries_salary_data)
-} else {
-  cat("No salary data available for any country.\n")
-}
-```
-### Median salary of 50 countries  
-Among the 50 countries, Switzerland has the highest median salary, followed by Denmark and the United States. Norway ranks fourth. The other countries in the top 10 highest salary list are Australia, United Arab Emirates, Singapore, Israel, Canada, and Sweden. On the other hand, the countries with the lowest median salaries are Vietnam, Indonesia, Greece, Russia, Portugal, Mexico, Hungary, India, Poland, and Czechia. The table below shows more details.  
-```{r}
-# Group the data by country and calculate the median salary for each country
-grouped_country_salary_data <- all_countries_salary_data %>%
-  group_by(Country) %>%
-  summarise(Median_salary = median(Percentile_50_Salary))
-
-# Convert country codes to full country names with the first letter capitalized
-grouped_country_salary_data$Country <- countrycode(grouped_country_salary_data$Country, 
-                                            origin = "iso2c", 
-                                            destination = "country.name", 
-                                            custom_match = c(US = "United States"))
-
-# Rename the Median_salary column
-colnames(grouped_country_salary_data)[colnames(grouped_country_salary_data) == "Median_salary"] <- "Median Salary"
-
-# Arrange the data by Median Salary in descending order
-grouped_country_salary_data <- grouped_country_salary_data %>%
-  arrange(desc(`Median Salary`))
-
-# Print the table
-kable(grouped_country_salary_data, col.names = c("Country", "Median Salary"))
-
-```
-
-
-### Job title and median salary from 50 countries
-Using the data set of 50 countries, I grouped the data by job titles and found the top 10 highest-paying and bottom 10 lowest-paying jobs. The data is shown in the tables below. The top five highest-paying jobs are C Level Executive, Physician, Finance Manager, and Dentist, while the bottom five lowest-paying jobs are Cashier, Waiter, Receptionist, Administrative Assistant, and Graphic Designer. I will also compare the different jobs from 52 first-tier cities from different countries to see if they show the same trend. The data may be useful for people who are choosing a career path.    
-```{r}
-
-# Group the data by job title and calculate the median salary for each job title
-grouped_world_data <- all_countries_salary_data %>%
-  group_by(Job_Title) %>%
-  summarise(Median_Salary = median(Percentile_50_Salary))
-
-# Sort the grouped data by Median_Salary in descending order
-sorted_world_data <- grouped_world_data %>%
-  arrange(desc(Median_Salary))
-
-# Get the top 10 job titles
-world_top_10_job <- head(sorted_world_data, 10)
-
-# Print the top 10 job titles and their median salaries
-# print(world_top_10_job)
-
-# Print the top 10 job titles and their median salaries as a table
-kable(world_top_10_job)
-
-# Get the bottom 10 job titles
-world_bottom_10_job <- tail(sorted_world_data, 10)
-
-# Print the bottom 10 job titles and their median salaries
-# print(world_bottom_10_job)
-kable(world_bottom_10_job)
-```
-### A contingency table showing high-paying and non-high-paying jobs
-In the contingency table below, you can observe the distribution of job titles in each city categorized into two groups: non-high-paying (High_pay_No), indicating median salaries below the defined threshold of 50,000 USD/year, and high-paying (High_pay_Yes), representing median salaries above the threshold. For instance, in Ankara, there are 47 job titles considered non-high-paying and 5 job titles classified as high-paying based on the specified threshold. Similarly, this table provides insights into the breakdown of job titles as high-paying or non-high-paying across various cities.
-```{r}
-# Make a copy of the original data frame
-high_pay_data <- combined_tidy_salary_data
-
-# Define the threshold for high-paying jobs (e.g., median salary above a certain value)
-threshold <- 50000
-
-# Create a binary column 'High_Paying' based on the threshold
-high_pay_data <- high_pay_data %>%
-  mutate(High_Paying = ifelse(Median_Salary > threshold, "High_pay_Yes", "High_pay_No"))
-
-# Capitalize the first letter of each city
-high_pay_data$City <- stringr::str_to_title(high_pay_data$City)
-
-# Create a summary table
-high_paying_table <- high_pay_data %>%
-  group_by(City, High_Paying) %>%
-  summarise(Count = n()) %>%
-  pivot_wider(names_from = High_Paying, 
-              values_from = Count, 
-              values_fill = 0)
-
-# Print the summary table
-# head(high_paying_table)
-kable(high_paying_table)
-```
-
-### Visulization of median salary of 52 cities 
-Among the 52 first-tier cities worldwide, I conducted an analysis of the median salaries associated with 52 distinct job titles. The figures below showcase the top 10 job titles with the highest median salaries as well as the 10 job titles with the lowest median salaries. This information can serve as a valuable reference for newcomers who are contemplating their career paths.
-
-#### Top 10 high-paying jobs in 52 first tier cities worldwide  
-```{r}
-# Create a bar plot of the top 10 median salaries by job title
-world_top_10_jobs <- combined_tidy_salary_data %>%
-  group_by(Job_Title) %>%
-  summarise(median_salary = median(Median_Salary, na.rm = TRUE)) %>%
-  arrange(median_salary) %>%
-  top_n(10)
-
-ggplot(world_top_10_jobs, aes(x = reorder(Job_Title, median_salary), y = median_salary, fill = Job_Title)) +
-  geom_bar(stat = "identity") +
-  labs(title = "10 Lowest Median Salaries by Job Title",
-       x = "Job Title",
-       y = "Median Salary") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0)) +
-  guides(fill = "none") +  # Remove the legend
-  coord_flip()  # Flip the coordinates to create a horizontal bar plot
-
-```  
-#### The bottom low-paying jobs in the first tier cities in the world  
-```{r}
-# Create a bar plot of the 10 lowest median salaries by job title
-  world_bottom_10_jobs <- combined_tidy_salary_data %>%
-  group_by(Job_Title) %>%
-  summarise(median_salary = median(Median_Salary, na.rm = TRUE)) %>%
-  arrange(median_salary) %>%
-  slice(1:10)  # Select the bottom 10 jobs
-
-ggplot(world_bottom_10_jobs, aes(x = reorder(Job_Title, -median_salary), y = median_salary, fill = Job_Title)) +
-  geom_bar(stat = "identity") +
-  labs(title = "10 Lowest Median Salaries by Job Title",
-       x = "Job Title",
-       y = "Median Salary") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0)) +
-  guides(fill = "none") +  # Remove the legend
-  coord_flip()  # Flip the coordinates to create a horizontal bar plot
-```
-
-### Teleport scores of 18 US cityies
-The bubble plot reveals insights into the quality of life across 18 state capital cities in the United States. Among these cities, Boston, New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking destinations, boasting exceptional living standards, educational opportunities, environmental conditions, and various other advantages. While these findings offer valuable guidance for those contemplating a relocation, it's important to note that the analysis is based on data from a limited sample of 18 cities.
-```{r}
-# Filter for unique cities and their scores
-teleport_score <- city_data_table %>%
-  select(city, score) %>%
-  distinct() %>%
-  mutate(city = str_to_title(city),  # Capitalize first letter of each word
-         city = str_replace_all(city, "-", " "))  # Replace dashes with spaces
-
-# Print the first few rows of the teleport_score dataset
-# head(teleport_score)
-
-# Create a unique color palette for the bubbles
-color_palette <- scale_fill_manual(values = scales::hue_pal()(length(unique(teleport_score$city))))
-
-# Create a bubble plot
-ggplot(teleport_score, aes(x = city, y = score, size = score)) +
-  geom_point(aes(fill = city), shape = 21, color = "black", alpha = 0.7) +
-  geom_text(aes(label = round(score, 1), vjust = 2), size = 1.7, position = position_nudge(y = 0.5)) +
-  scale_size_continuous(range = c(2, 10)) +
-  labs(
-    title = "Teleport Score Bubble Plot of 18 US Cities",
-    x = "City Name",
-    y = "Teleport Score",
-    size = "Score"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  guides(fill = FALSE) +  # Hide the color legend for city
-  color_palette  # Apply the color palette
-```  
-
-The top 10 median salary jobs across 52 first tier cities
-```{r}
-# Load the required libraries
-library(dplyr)
-
-# Calculate the median salary for each job title across cities
-median_salaries <- combined_tidy_salary_data %>%
-  group_by(Job_Title) %>%
-  summarize(Median_Salary = median(Median_Salary, na.rm = TRUE)) %>%
-  arrange(desc(Median_Salary))
-
-# Select the top 10 job titles
-top_10_salary_titles <- head(median_salaries, 10)
-
-# Print the top 10 job titles
-print(top_10_salary_titles)
-
-```
-### The top 10 median salary cities of the 52 first tier cities worldwide
-```{r}
-# Load the required library
-library(dplyr)
-
-# Group the data by city and calculate the median salary for each city
-median_salary_by_city <- combined_tidy_salary_data %>%
-  group_by(City) %>%
-  summarize(Median_Salary = median(Median_Salary))
-
-# Sort the data in descending order based on median salary
-top_10_salary_cities <- median_salary_by_city %>%
-  arrange(desc(Median_Salary)) %>%
-  head(10)
-
-# Print the top 10 cities with the highest median salary
-# print(top_10_salary_cities)
-kable(top_10_salary_cities)
-```
-#### Top 10 median salary jobs of 52 cities
-
-```{r}
-# Filter the top 10 highest median salary jobs
-top_10_high_salary <- combined_tidy_salary_data %>%
-  group_by(Job_Title) %>%
-  summarize(Median_Salary = max(Median_Salary)) %>%
-  arrange(desc(Median_Salary)) %>%
-  head(10)
-
-# Create a scatter plot for the top 10 highest median salary jobs
-ggplot(combined_tidy_salary_data %>% filter(Job_Title %in% top_10_high_salary$Job_Title), 
-       aes(x = Median_Salary, y = reorder(Job_Title, -Median_Salary))) +
-  geom_point(aes(color = Job_Title), size = 2) +
-  labs(title = "Top 10 Median Salary Jobs Across 52 Cities",
-       x = "Median Salary (USD)",
-       y = "Job Title") +
-  scale_x_continuous(labels = scales::number_format(accuracy = 1)) +  # Format x-axis labels
-  theme_minimal() +
-  #theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels
-  theme(legend.position = "none")  # Remove the legend
-```  
-
-### Graphs showing different life quality scores of US cities
-I created a group of graphs to visualize different categories of life quality scores. Each bar plot shows the scores of one category in an ascending order. For example, Oklahoma City has the highest score for housing and living cost. New York has the highest score for startup, venture capital, travel connectivity, and leisure & culture. There seems to be not much variation among 18 US cities on the healthcare. The group of plots below provides more information. This data may be helpful for those who are planning to move. 
-```{r, fig.show='hold', out.width="25%"}
-# compare each category across cities
-par(mfrow = c(5, 4))
-# Get unique category names
-unique_categories <- unique(scores_df1$Category)  # Use the correct column name
-
-# Filter out the "Economy Score" category
-filtered_categories <- unique_categories[unique_categories != "Economy"]
-
-# Create a list to store the plots
-plots <- list()
-
-# Iterate through each category (excluding "Economy Score") and create a bar plot
-for (category in filtered_categories) {
-  # Filter the data for the current category
-  category_data <- subset(scores_df1, Category == category)  # Use the correct column name
-  
-  # Sort the data by Score in descending order
-  category_data <- category_data[order(-category_data$Score), ]
-  
-  # Create a bar plot for the current category
-  p <- ggplot(category_data, aes(x = Score, y = reorder(City, -Score), fill = City)) +
-    geom_bar(stat = "identity") +
-    labs(title = paste("Bar Plot of", category, "Scores by City"), x = paste(category, "Score"), y = "City") +
-    theme(axis.text.y = element_text(hjust = 1)) +
-    coord_cartesian(xlim = c(0, 10)) +  # Set the x-axis limits to 0 and 10
-    theme(legend.position = "none")  # Remove the legend
-    
-  # Store the plot in the list
-  plots[[category]] <- p
-}
-
-# Print all the bar plots (excluding "Economy Score")
-for (i in 1:length(filtered_categories)) {
-  print(plots[[i]])
-}
-```
-
-### A function showing life quality in 18 US state capital cities.  
+### Life quality scores in 18 US state capital cities  
 The following function will create a table presenting life quality scores for all 18 state capital cities of the US, which are accessible through the Teleport API. However, due to the extensive nature of the table, the function also allows users to select a city of their preference from the aforementioned city name table and substitute 'Raleigh' within the function. This action will result in the generation of a plot that visualizes life quality scores across diverse categories including Housing, Cost of Living, Safety, Education, and more.  
 
 #### Display life quality scores of city of interest 
@@ -677,7 +644,41 @@ if (!is.null(selected_city_data)) {
 } else {
   cat("City not found\n")
 }
-```
+```  
+
+### Teleport scores of 18 US cityies
+The bubble plot reveals insights into the quality of life across 18 state capital cities in the United States. Among these cities, Boston, New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking destinations, boasting exceptional living standards, educational opportunities, environmental conditions, and various other advantages. While these findings offer valuable guidance for those contemplating a relocation, it's important to note that the analysis is based on data from a limited sample of 18 cities.
+```{r}
+# Filter for unique cities and their scores
+teleport_score <- city_data_table %>%
+  select(city, score) %>%
+  distinct() %>%
+  mutate(city = str_to_title(city),  # Capitalize first letter of each word
+         city = str_replace_all(city, "-", " "))  # Replace dashes with spaces
+
+# Print the first few rows of the teleport_score dataset
+# head(teleport_score)
+
+# Create a unique color palette for the bubbles
+color_palette <- scale_fill_manual(values = scales::hue_pal()(length(unique(teleport_score$city))))
+
+# Create a bubble plot
+ggplot(teleport_score, aes(x = city, y = score, size = score)) +
+  geom_point(aes(fill = city), shape = 21, color = "black", alpha = 0.7) +
+  geom_text(aes(label = round(score, 1), vjust = 1.5), size = 3, position = position_nudge(y = 0.5)) +
+  scale_size_area(max_size = 13) +
+  labs(
+    title = "Teleport Score Bubble Plot of 18 US Cities",
+    x = "City Name",
+    y = "Teleport Score",
+    size = "Score"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "none") + # Remove legend
+  guides(fill = FALSE) +  # Hide the color legend for city
+  color_palette  # Apply the color palette
+```  
 
 ## Summary
 In this vignette, I developed some R functions to interact with the Teleport API and retrieve some endpoints data. I performed a preliminary analysis of the data and summarized it in tables and plots with some explanation. I found some interesting insights.  
