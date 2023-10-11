@@ -1,42 +1,41 @@
-ST558 Project 2
+Navigating APIs with R: A Vignette Project
 ================
 Hui Fang
 2023-10-04
 
-- [1 Vignette of Teleport API](#1-vignette-of-teleport-api)
-  - [1.1 Introduction](#11-introduction)
-  - [1.2 Packages requirements](#12-packages-requirements)
-  - [1.3 Gaining Access to the API](#13-gaining-access-to-the-api)
-  - [1.4 Develop functions to query the
-    API](#14-develop-functions-to-query-the-api)
-    - [1.4.1 Query median salary of different jobs from 50
-      countries](#141-query-median-salary-of-different-jobs-from-50-countries)
-    - [1.4.2 Query median salary of first tier cities
-      worldwide](#142-query-median-salary-of-first-tier-cities-worldwide)
-    - [1.4.3 Query life quality scores of state capital cities in the
-      US](#143-query-life-quality-scores-of-state-capital-cities-in-the-us)
-  - [1.5 Data Exploration](#15-data-exploration)
-    - [1.5.1 Median salary of 50
-      countries](#151-median-salary-of-50-countries)
-    - [1.5.2 Job title and median salary from 50
-      countries](#152-job-title-and-median-salary-from-50-countries)
-    - [1.5.3 High-paying and non-high-paying jobs (contingency
-      table)](#153-high-paying-and-non-high-paying-jobs-contingency-table)
-    - [1.5.4 Visulization of median salary of 52 first tier cities
-      worldwide](#154-visulization-of-median-salary-of-52-first-tier-cities-worldwide)
-    - [1.5.5 The top 10 median salary cities of the 52 first tier cities
-      worldwide](#155-the-top-10-median-salary-cities-of-the-52-first-tier-cities-worldwide)
-    - [1.5.6 Visualize different life quality scores of US
-      cities](#156-visualize-different-life-quality-scores-of-us-cities)
-    - [1.5.7 Life quality scores in 18 US state capital
-      cities](#157-life-quality-scores-in-18-us-state-capital-cities)
-    - [1.5.8 Teleport scores of 18 US
-      cityies](#158-teleport-scores-of-18-us-cityies)
-  - [1.6 Summary](#16-summary)
+- [0.1 Introduction](#01-introduction)
+- [0.2 Packages requirements](#02-packages-requirements)
+- [0.3 Gaining Access to the API](#03-gaining-access-to-the-api)
+- [0.4 Develop functions to query the
+  API](#04-develop-functions-to-query-the-api)
+  - [0.4.1 Query median salary of different jobs from 50
+    countries](#041-query-median-salary-of-different-jobs-from-50-countries)
+  - [0.4.2 Query median salary of first tier cities
+    worldwide](#042-query-median-salary-of-first-tier-cities-worldwide)
+  - [0.4.3 Query life quality scores of state capital cities in the
+    US](#043-query-life-quality-scores-of-state-capital-cities-in-the-us)
+- [0.5 Data Exploration](#05-data-exploration)
+  - [0.5.1 Median salary of 50
+    countries](#051-median-salary-of-50-countries)
+  - [0.5.2 Job title and median salary from 50
+    countries](#052-job-title-and-median-salary-from-50-countries)
+  - [0.5.3 High-paying and non-high-paying jobs (contingency
+    table)](#053-high-paying-and-non-high-paying-jobs-contingency-table)
+  - [0.5.4 Visulization of median salary of 52 first tier cities
+    worldwide](#054-visulization-of-median-salary-of-52-first-tier-cities-worldwide)
+  - [0.5.5 The top 10 median salary cities of the 52 first tier cities
+    worldwide](#055-the-top-10-median-salary-cities-of-the-52-first-tier-cities-worldwide)
+  - [0.5.6 Visualize different life quality scores of US
+    cities](#056-visualize-different-life-quality-scores-of-us-cities)
+  - [0.5.7 Display summary for the city of your
+    choice](#057-display-summary-for-the-city-of-your-choice)
+  - [0.5.8 Life quality scores in 18 US state capital
+    cities](#058-life-quality-scores-in-18-us-state-capital-cities)
+  - [0.5.9 Teleport scores of 18 US
+    cityies](#059-teleport-scores-of-18-us-cityies)
+- [0.6 Summary](#06-summary)
 
-# 1 Vignette of Teleport API
-
-## 1.1 Introduction
+## 0.1 Introduction
 
 The document serves as a vignette describing how to read and summarize
 data from an [API](https://en.wikipedia.org/wiki/API). In this
@@ -46,26 +45,25 @@ that offers an up-to-date quality of life database for Planet Earth,
 incorporating data from over 300 different dimensions from more than 70
 different sources.
 
-## 1.2 Packages requirements
+## 0.2 Packages requirements
 
 The following `R` packages were used to create the vignette. Users are
 encouraged to have these packages installed or loaded to run the
-functions below.  
-- [httr :](https://httr.r-lib.org/) For assessing the API  
-- [jsonlite
-:](https://cran.r-project.org/web/packages/jsonlite/index.html) For
-interacting with API  
-- [tidyverse :](https://www.tidyverse.org/) A set of packages for data
-manipulation and visualization  
-- [knitr :](https://cran.r-project.org/web/packages/knitr/index.html)
-For friendly displaying tables in a markdown  
--
-[kableExtra:](https://cran.r-project.org/web/packages/kableExtra/index.html)
-For building complex HTML or ‘LaTeX’ tables  
-- [stringr](https://cran.r-project.org/web/packages/stringr/index.html)
-For working with character strings in R programming  
-- [countrycode](https://cran.r-project.org/web/packages/countrycode/)
-For converting country names and country codes
+functions below.
+
+- [`httr`:](https://httr.r-lib.org/) For assessing the API  
+- [`jsonlite`:](https://cran.r-project.org/web/packages/jsonlite/index.html)
+  For interacting with API  
+- [`tidyverse`:](https://www.tidyverse.org/) A set of packages for data
+  manipulation and visualization  
+- [`knitr`:](https://cran.r-project.org/web/packages/knitr/index.html)
+  For friendly displaying tables in a markdown  
+- [`stringr`:](https://cran.r-project.org/web/packages/stringr/index.html)
+  For working with character strings in R programming  
+- [`countrycode`:](https://cran.r-project.org/web/packages/countrycode/)
+  For converting country names and country codes  
+- [`kableExtra`:](https://cran.r-project.org/web/packages/kableExtra/index.html)
+  For building complex tables
 
 Install and load the packages
 
@@ -73,46 +71,22 @@ Install and load the packages
 library(httr)
 library(jsonlite)
 library(tidyverse)
-```
-
-    ## ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.3     ✔ purrr     1.0.2
-    ## ✔ forcats   1.0.0     ✔ readr     2.1.4
-    ## ✔ ggplot2   3.4.3     ✔ stringr   1.5.0
-    ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter()  masks stats::filter()
-    ## ✖ purrr::flatten() masks jsonlite::flatten()
-    ## ✖ dplyr::lag()     masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
 library(knitr)
 library(stringr)
 library(kableExtra)
-```
-
-    ## 
-    ## Attaching package: 'kableExtra'
-    ## 
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     group_rows
-
-``` r
 library(countrycode)
 ```
 
-## 1.3 Gaining Access to the API
+## 0.3 Gaining Access to the API
 
 Teleport API does not require a key for access, making it less complex
 to use compared to other APIs that require a key. Users can simply vist
 the [Teleport API](https://developers.teleport.org/api/) website and
 follow the instructions to query the endpoints they want.
 
-## 1.4 Develop functions to query the API
+## 0.4 Develop functions to query the API
 
-### 1.4.1 Query median salary of different jobs from 50 countries
+### 0.4.1 Query median salary of different jobs from 50 countries
 
 ``` r
 # Define a list of ISO alpha-2 country codes for the 50 countries to retrieve salary data for
@@ -153,7 +127,7 @@ for (country_code in country_codes) {
 }
 ```
 
-### 1.4.2 Query median salary of first tier cities worldwide
+### 0.4.2 Query median salary of first tier cities worldwide
 
 ``` r
 # Define a list of city slugs for 52 first-tier cities
@@ -198,7 +172,7 @@ for (city_slug in first_tier_city_slugs) {
 }
 ```
 
-#### 1.4.2.1 Clean the data set of salary in from 52 first tier cities
+#### 0.4.2.1 Clean the data set of salary in from 52 first tier cities
 
 ``` r
 # Initialize an empty list to store tidy salary data for each city
@@ -232,7 +206,7 @@ combined_tidy_salary_data <- do.call(rbind, tidy_salary_data_list)
 # head(combined_tidy_salary_data)
 ```
 
-### 1.4.3 Query life quality scores of state capital cities in the US
+### 0.4.3 Query life quality scores of state capital cities in the US
 
 ``` r
 # Define a function to fetch city data
@@ -312,7 +286,7 @@ city_data_table <- city_data_table %>%
 # head(city_data_table)
 ```
 
-#### 1.4.3.1 Produce life quality scores data set for 18 US cities
+#### 0.4.3.1 Produce life quality scores data set for 18 US cities
 
 ``` r
 # Create scores_df1 using city_data_table
@@ -324,7 +298,7 @@ scores_df1 <- city_data_table %>%
 # head(scores_df1)
 ```
 
-#### 1.4.3.2 Build a table to show city names for you to choose from
+#### 0.4.3.2 Build a table to show city names for you to choose from
 
 You can choose city of interest from the following table and put its
 name in the next function to show the summary of the city.
@@ -346,7 +320,7 @@ city_sections <- split(city_table, rep(1:3, each = 6))
 us_city_table <- do.call(cbind, city_sections)
 
 # Rename the columns
-colnames(us_city_table) <- c("Number", "City_Name", "Number", "City_Name", "Number", "City_Name")
+colnames(us_city_table) <- c("Number", "City Name", "Number", "City Name", "Number", "City Name")
 
 # Print the table
 # print(us_city_table, row.names = FALSE)
@@ -363,7 +337,7 @@ Number
 </th>
 <th style="text-align:left;">
 
-City_Name
+City Name
 
 </th>
 <th style="text-align:right;">
@@ -373,7 +347,7 @@ Number
 </th>
 <th style="text-align:left;">
 
-City_Name
+City Name
 
 </th>
 <th style="text-align:right;">
@@ -383,7 +357,7 @@ Number
 </th>
 <th style="text-align:left;">
 
-City_Name
+City Name
 
 </th>
 </tr>
@@ -584,11 +558,11 @@ madison
 </tbody>
 </table>
 
-## 1.5 Data Exploration
+## 0.5 Data Exploration
 
-### 1.5.1 Median salary of 50 countries
+### 0.5.1 Median salary of 50 countries
 
-#### 1.5.1.1 Tidy the raw data of median salary from 50 countries
+#### 0.5.1.1 Tidy the raw data of median salary from 50 countries
 
 ``` r
 # Initialize an empty list to store tidy salary data for all countries
@@ -625,7 +599,7 @@ if (length(tidy_salary_data_list) > 0) {
 }
 ```
 
-#### 1.5.1.2 Display median salary of 50 countries
+#### 0.5.1.2 Display median salary of 50 countries
 
 Among the 50 countries, Switzerland has the highest median salary,
 followed by Denmark and the United States. Norway ranks fourth. The
@@ -1277,7 +1251,7 @@ Egypt
 </tbody>
 </table>
 
-### 1.5.2 Job title and median salary from 50 countries
+### 0.5.2 Job title and median salary from 50 countries
 
 Using the data set of 50 countries, I grouped the data by job titles and
 found the top 10 highest-paying and bottom 10 lowest-paying jobs. The
@@ -1596,7 +1570,7 @@ Cashier
 </tbody>
 </table>
 
-### 1.5.3 High-paying and non-high-paying jobs (contingency table)
+### 0.5.3 High-paying and non-high-paying jobs (contingency table)
 
 In the contingency table below, you can observe the distribution of job
 titles in each city categorized into two groups: non-high-paying
@@ -2547,7 +2521,7 @@ Vancouver
 </tbody>
 </table>
 
-### 1.5.4 Visulization of median salary of 52 first tier cities worldwide
+### 0.5.4 Visulization of median salary of 52 first tier cities worldwide
 
 Among the 52 first-tier cities worldwide, I conducted an analysis of the
 median salaries associated with 52 distinct job titles. The figures
@@ -2556,7 +2530,7 @@ well as the 10 job titles with the lowest median salaries. This
 information can serve as a valuable reference for newcomers who are
 contemplating their career paths.
 
-#### 1.5.4.1 Top 10 high-paying jobs in 52 first tier cities worldwide
+#### 0.5.4.1 Top 10 high-paying jobs in 52 first tier cities worldwide
 
 ``` r
 # Create a bar plot of the top 10 median salaries by job title
@@ -2581,9 +2555,9 @@ ggplot(world_top_10_jobs, aes(x = reorder(Job_Title, median_salary), y = median_
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-#### 1.5.4.2 The bottom 10 low-paying jobs in the first tier cities worldwide
+#### 0.5.4.2 The bottom 10 low-paying jobs in the first tier cities worldwide
 
 ``` r
 # Create a bar plot of the 10 lowest median salaries by job title
@@ -2604,7 +2578,7 @@ ggplot(world_bottom_10_jobs, aes(x = reorder(Job_Title, -median_salary), y = med
   coord_flip()  # Flip the coordinates to create a horizontal bar plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 The top 10 median salary jobs across 52 first tier cities
 
@@ -2639,7 +2613,7 @@ print(top_10_salary_titles)
     ##  9 IT Manager                  45764.
     ## 10 Attorney                    44731.
 
-### 1.5.5 The top 10 median salary cities of the 52 first tier cities worldwide
+### 0.5.5 The top 10 median salary cities of the 52 first tier cities worldwide
 
 ``` r
 # Load the required library
@@ -2799,7 +2773,7 @@ edmonton
 </tbody>
 </table>
 
-#### 1.5.5.1 Top 10 median salary jobs from 52 cities
+#### 0.5.5.1 Top 10 median salary jobs from 52 cities
 
 ``` r
 # Filter the top 10 highest median salary jobs
@@ -2822,9 +2796,9 @@ ggplot(combined_tidy_salary_data %>% filter(Job_Title %in% top_10_high_salary$Jo
   theme(legend.position = "none")  # Remove the legend
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-### 1.5.6 Visualize different life quality scores of US cities
+### 0.5.6 Visualize different life quality scores of US cities
 
 I created a group of graphs to visualize different categories of life
 quality scores. Each bar plot shows the scores of one category in an
@@ -2873,8 +2847,10 @@ for (i in 1:length(filtered_categories)) {
 }
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-17-1.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-2.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-3.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-4.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-5.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-6.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-7.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-8.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-9.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-10.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-11.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-12.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-13.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-14.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-15.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-17-16.png" width="25%" />
-\### Display summary for the city of your choice  
+<img src="README_files/figure-gfm/unnamed-chunk-20-1.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-2.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-3.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-4.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-5.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-6.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-7.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-8.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-9.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-10.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-11.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-12.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-13.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-14.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-15.png" width="25%" /><img src="README_files/figure-gfm/unnamed-chunk-20-16.png" width="25%" />
+
+### 0.5.7 Display summary for the city of your choice
+
 Once you have chosen the city you are interested in from the above
 table, simply replace “Raleigh” with your chosen city’s name in the
 function below to view a summary of that city. I have set Raleigh as the
@@ -2937,7 +2913,7 @@ if (!is.null(selected_city_data)) {
     ## According to our city rankings, this is a good place to live with high ratings in healthcare, education and environmental quality.
     ## Raleigh is one of the top ten city matches for 3.4% of Teleport users.
 
-### 1.5.7 Life quality scores in 18 US state capital cities
+### 0.5.8 Life quality scores in 18 US state capital cities
 
 The following function will create a table presenting life quality
 scores for all 18 state capital cities of the US, which are accessible
@@ -2948,7 +2924,7 @@ preference from the aforementioned city name table and substitute
 of a plot that visualizes life quality scores across diverse categories
 including Housing, Cost of Living, Safety, Education, and more.
 
-#### 1.5.7.1 Display life quality scores of city of interest
+#### 0.5.8.1 Display life quality scores of city of interest
 
 ``` r
 # Default city
@@ -2992,13 +2968,16 @@ if (!is.null(selected_city_data)) {
 
     ## Life Quality Scores for Raleigh
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
-### 1.5.8 Teleport scores of 18 US cityies
+### 0.5.9 Teleport scores of 18 US cityies
 
-The bubble plot reveals insights into the quality of life across 18
-state capital cities in the United States. Among these cities, Boston,
-New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking
+Teleport API provides the quality of life score, named Teleport score,
+which is a comprehensive evaluation of life quality in a city. The
+higher the score, the better the life quality is in a city. The bubble
+plot below reveals insights into the quality of life across 18 state
+capital cities in the United States. Among these cities, Boston, New
+York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking
 destinations, boasting exceptional living standards, educational
 opportunities, environmental conditions, and various other advantages.
 While these findings offer valuable guidance for those contemplating a
@@ -3037,13 +3016,9 @@ ggplot(teleport_score, aes(x = city, y = score, size = score)) +
   color_palette  # Apply the color palette
 ```
 
-    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as of ggplot2 3.3.4.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
-
-## 1.6 Summary
+## 0.6 Summary
 
 In this vignette, I developed some R functions to interact with the
 Teleport API and retrieve some endpoints data. I performed a preliminary
