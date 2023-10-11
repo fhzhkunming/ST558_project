@@ -3,6 +3,8 @@ Navigating APIs with R: A Vignette Project
 Hui Fang
 2023-10-04
 
+# Vignette of Teleport API
+
 ## Introduction
 
 The document serves as a vignette describing how to read and summarize

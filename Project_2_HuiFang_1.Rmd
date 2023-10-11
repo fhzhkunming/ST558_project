@@ -8,11 +8,9 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```  
-<<<<<<< HEAD
-# Vignette of Teleport API
-=======
 
->>>>>>> 16757fd4bd85886d5d69e9ffb76429acb425fc98
+# Vignette of Teleport API  
+
 ## Introduction  
 The document serves as a vignette describing how to read and summarize data from an [API](https://en.wikipedia.org/wiki/API). In this demonstration, I have used the Teleport API. The [Teleport API](https://developers.teleport.org/api/) is an integrated data system that offers an up-to-date quality of life database for Planet Earth, incorporating data from over 300 different dimensions from more than 70 different sources.
 
