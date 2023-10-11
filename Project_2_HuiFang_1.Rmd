@@ -1,5 +1,5 @@
 ---
-title: "ST558 Project 2"
+title: "Navigating APIs with R: A Vignette Project"
 author: "Hui Fang"
 date: "2023-10-04"
 output: github_document
@@ -8,7 +8,6 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```  
-# Vignette of Teleport API
 
 ## Introduction  
 The document serves as a vignette describing how to read and summarize data from an [API](https://en.wikipedia.org/wiki/API). In this demonstration, I have used the Teleport API. The [Teleport API](https://developers.teleport.org/api/) is an integrated data system that offers an up-to-date quality of life database for Planet Earth, incorporating data from over 300 different dimensions from more than 70 different sources.
@@ -16,16 +15,17 @@ The document serves as a vignette describing how to read and summarize data from
 ## Packages requirements  
 
 The following `R` packages were used to create the vignette. Users are encouraged to have these packages installed or loaded to run the functions below.  
-- [httr :](https://httr.r-lib.org/) For assessing the API  
-- [jsonlite :](https://cran.r-project.org/web/packages/jsonlite/index.html) For interacting with API   
-- [tidyverse :](https://www.tidyverse.org/) A set of packages for data manipulation and visualization  
-- [knitr :](https://cran.r-project.org/web/packages/knitr/index.html) For friendly displaying tables in a markdown  
-- [kableExtra: ](https://cran.r-project.org/web/packages/kableExtra/index.html) For building complex HTML or 'LaTeX' tables  
-- [stringr](https://cran.r-project.org/web/packages/stringr/index.html) For working with character strings in R programming   
-- [countrycode](https://cran.r-project.org/web/packages/countrycode/) For converting country names and country codes
+
+- [`httr`: ](https://httr.r-lib.org/) For assessing the API  
+- [`jsonlite`: ](https://cran.r-project.org/web/packages/jsonlite/index.html) For interacting with API  
+- [`tidyverse`: ](https://www.tidyverse.org/) A set of packages for data manipulation and visualization  
+- [`knitr`: ](https://cran.r-project.org/web/packages/knitr/index.html) For friendly displaying tables in a markdown  
+- [`stringr`: ](https://cran.r-project.org/web/packages/stringr/index.html) For working with character strings in R programming  
+- [`countrycode`: ](https://cran.r-project.org/web/packages/countrycode/) For converting country names and country codes  
+- [`kableExtra`: ](https://cran.r-project.org/web/packages/kableExtra/index.html) For building complex tables  
 
 Install and load the packages 
-```{r, results='hide', warning=FALSE}
+```{r, results='hide', message=FALSE}
 library(httr)
 library(jsonlite)
 library(tidyverse)
@@ -266,7 +266,7 @@ city_sections <- split(city_table, rep(1:3, each = 6))
 us_city_table <- do.call(cbind, city_sections)
 
 # Rename the columns
-colnames(us_city_table) <- c("Number", "City_Name", "Number", "City_Name", "Number", "City_Name")
+colnames(us_city_table) <- c("Number", "City Name", "Number", "City Name", "Number", "City Name")
 
 # Print the table
 # print(us_city_table, row.names = FALSE)
@@ -276,7 +276,7 @@ kable(us_city_table)
 ## Data Exploration
 ### Median salary of 50 countries 
 #### Tidy the raw data of median salary from 50 countries
-```{r}
+```{r, results='hide'}
 # Initialize an empty list to store tidy salary data for all countries
 tidy_salary_data_list <- list()
 
@@ -535,7 +535,8 @@ for (category in filtered_categories) {
 for (i in 1:length(filtered_categories)) {
   print(plots[[i]])
 }
-```
+```  
+
 ### Display summary for the city of your choice  
 Once you have chosen the city you are interested in from the above table, simply replace "Raleigh" with your chosen city's name in the function below to view a summary of that city. I have set Raleigh as the default city.  
 ```{r}
@@ -592,7 +593,7 @@ if (!is.null(selected_city_data)) {
 The following function will create a table presenting life quality scores for all 18 state capital cities of the US, which are accessible through the Teleport API. However, due to the extensive nature of the table, the function also allows users to select a city of their preference from the aforementioned city name table and substitute 'Raleigh' within the function. This action will result in the generation of a plot that visualizes life quality scores across diverse categories including Housing, Cost of Living, Safety, Education, and more.  
 
 #### Display life quality scores of city of interest 
-```{r}
+```{r, message=FALSE}
 # Default city
 default_city <- "raleigh"
 
@@ -633,8 +634,8 @@ if (!is.null(selected_city_data)) {
 ```  
 
 ### Teleport scores of 18 US cityies
-The bubble plot reveals insights into the quality of life across 18 state capital cities in the United States. Among these cities, Boston, New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking destinations, boasting exceptional living standards, educational opportunities, environmental conditions, and various other advantages. While these findings offer valuable guidance for those contemplating a relocation, it's important to note that the analysis is based on data from a limited sample of 18 cities.
-```{r}
+Teleport API provides the quality of life score, named Teleport score, which is a comprehensive evaluation of life quality in a city. The higher the score, the better the life quality is in a city. The bubble plot below reveals insights into the quality of life across 18 state capital cities in the United States. Among these cities, Boston, New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking destinations, boasting exceptional living standards, educational opportunities, environmental conditions, and various other advantages. While these findings offer valuable guidance for those contemplating a relocation, it's important to note that the analysis is based on data from a limited sample of 18 cities.
+```{r, warning=FALSE}
 # Filter for unique cities and their scores
 teleport_score <- city_data_table %>%
   select(city, score) %>%

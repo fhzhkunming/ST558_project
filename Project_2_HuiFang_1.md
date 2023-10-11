@@ -1,9 +1,7 @@
-ST558 Project 2
+Navigating APIs with R: A Vignette Project
 ================
 Hui Fang
 2023-10-04
-
-# Vignette of Teleport API
 
 ## Introduction
 
@@ -19,22 +17,21 @@ different sources.
 
 The following `R` packages were used to create the vignette. Users are
 encouraged to have these packages installed or loaded to run the
-functions below.  
-- [httr :](https://httr.r-lib.org/) For assessing the API  
-- [jsonlite
-:](https://cran.r-project.org/web/packages/jsonlite/index.html) For
-interacting with API  
-- [tidyverse :](https://www.tidyverse.org/) A set of packages for data
-manipulation and visualization  
-- [knitr :](https://cran.r-project.org/web/packages/knitr/index.html)
-For friendly displaying tables in a markdown  
--
-[kableExtra:](https://cran.r-project.org/web/packages/kableExtra/index.html)
-For building complex HTML or ‘LaTeX’ tables  
-- [stringr](https://cran.r-project.org/web/packages/stringr/index.html)
-For working with character strings in R programming  
-- [countrycode](https://cran.r-project.org/web/packages/countrycode/)
-For converting country names and country codes
+functions below.
+
+- [`httr`:](https://httr.r-lib.org/) For assessing the API  
+- [`jsonlite`:](https://cran.r-project.org/web/packages/jsonlite/index.html)
+  For interacting with API  
+- [`tidyverse`:](https://www.tidyverse.org/) A set of packages for data
+  manipulation and visualization  
+- [`knitr`:](https://cran.r-project.org/web/packages/knitr/index.html)
+  For friendly displaying tables in a markdown  
+- [`stringr`:](https://cran.r-project.org/web/packages/stringr/index.html)
+  For working with character strings in R programming  
+- [`countrycode`:](https://cran.r-project.org/web/packages/countrycode/)
+  For converting country names and country codes  
+- [`kableExtra`:](https://cran.r-project.org/web/packages/kableExtra/index.html)
+  For building complex tables
 
 Install and load the packages
 
@@ -42,34 +39,9 @@ Install and load the packages
 library(httr)
 library(jsonlite)
 library(tidyverse)
-```
-
-    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.3     ✔ readr     2.1.4
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.0
-    ## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ✔ purrr     1.0.2     
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter()  masks stats::filter()
-    ## ✖ purrr::flatten() masks jsonlite::flatten()
-    ## ✖ dplyr::lag()     masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
 library(knitr)
 library(stringr)
 library(kableExtra)
-```
-
-    ## 
-    ## Attaching package: 'kableExtra'
-    ## 
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     group_rows
-
-``` r
 library(countrycode)
 ```
 
@@ -316,7 +288,7 @@ city_sections <- split(city_table, rep(1:3, each = 6))
 us_city_table <- do.call(cbind, city_sections)
 
 # Rename the columns
-colnames(us_city_table) <- c("Number", "City_Name", "Number", "City_Name", "Number", "City_Name")
+colnames(us_city_table) <- c("Number", "City Name", "Number", "City Name", "Number", "City Name")
 
 # Print the table
 # print(us_city_table, row.names = FALSE)
@@ -330,19 +302,19 @@ kable(us_city_table)
 Number
 </th>
 <th style="text-align:left;">
-City_Name
+City Name
 </th>
 <th style="text-align:right;">
 Number
 </th>
 <th style="text-align:left;">
-City_Name
+City Name
 </th>
 <th style="text-align:right;">
 Number
 </th>
 <th style="text-align:left;">
-City_Name
+City Name
 </th>
 </tr>
 </thead>
@@ -510,14 +482,6 @@ if (length(tidy_salary_data_list) > 0) {
   cat("No salary data available for any country.\n")
 }
 ```
-
-    ##      Country                Job_Title Percentile_50_Salary
-    ## US.1      US          Account Manager             61157.96
-    ## US.2      US               Accountant             55013.10
-    ## US.3      US Administrative Assistant             33900.14
-    ## US.4      US                Architect             61169.11
-    ## US.5      US                 Attorney             82706.83
-    ## US.6      US         Business Analyst             64180.18
 
 #### Display median salary of 50 countries
 
@@ -2115,7 +2079,9 @@ for (i in 1:length(filtered_categories)) {
 ```
 
 <img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-1.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-2.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-3.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-4.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-5.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-6.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-7.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-8.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-9.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-10.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-11.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-12.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-13.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-14.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-15.png" width="25%" /><img src="Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-17-16.png" width="25%" />
-\### Display summary for the city of your choice  
+
+### Display summary for the city of your choice
+
 Once you have chosen the city you are interested in from the above
 table, simply replace “Raleigh” with your chosen city’s name in the
 function below to view a summary of that city. I have set Raleigh as the
@@ -2237,9 +2203,12 @@ if (!is.null(selected_city_data)) {
 
 ### Teleport scores of 18 US cityies
 
-The bubble plot reveals insights into the quality of life across 18
-state capital cities in the United States. Among these cities, Boston,
-New York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking
+Teleport API provides the quality of life score, named Teleport score,
+which is a comprehensive evaluation of life quality in a city. The
+higher the score, the better the life quality is in a city. The bubble
+plot below reveals insights into the quality of life across 18 state
+capital cities in the United States. Among these cities, Boston, New
+York, Raleigh, Salt Lake City, and Madison emerge as the top-ranking
 destinations, boasting exceptional living standards, educational
 opportunities, environmental conditions, and various other advantages.
 While these findings offer valuable guidance for those contemplating a
@@ -2277,12 +2246,6 @@ ggplot(teleport_score, aes(x = city, y = score, size = score)) +
   guides(fill = FALSE) +  # Hide the color legend for city
   color_palette  # Apply the color palette
 ```
-
-    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
-    ## of ggplot2 3.3.4.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
 
 ![](Project_2_HuiFang_1_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
